@@ -1,5 +1,6 @@
 import br.com.desenvigor.model.Client;
 import br.com.desenvigor.model.ProductItem;
+import br.com.desenvigor.model.ShopList;
 
 import java.math.BigDecimal;
 import java.text.ParseException;
@@ -20,6 +21,17 @@ public class Program {
             System.out.print("\nInsert operation number: ");
             operation = sc.nextInt();
             sc.nextLine();
+            ProductItem product4 = new ProductItem("Book", "New book", new BigDecimal("20.10"));
+            ProductItem product1 = new ProductItem("Pencil", "Blue", new BigDecimal("3.50"));
+            ProductItem product2 = new ProductItem("Computer", "Dell", new BigDecimal("2000.10"));
+            ProductItem product3 = new ProductItem("Mouse", "Microsoft", new BigDecimal("2.10"));
+
+            products.add(product1);
+            products.add(product2);
+            products.add(product3);
+            products.add(product4);
+
+
 
             switch (operation){
                 case 1:{
@@ -53,10 +65,12 @@ public class Program {
                     break;
                 }
                 case 3:{
+                    ShopList list = new ShopList();
                     int i = 0;
                     for (ProductItem item: products) {
                         System.out.println(++i +" - "+ item);
                     }
+
                     boolean cond = true;
                     int opt = 0;
                     do {
@@ -67,8 +81,8 @@ public class Program {
                             cond = false;
                             break;
                         }
-
-
+                        list.addProduct(products.get(opt-1));
+                        System.out.println(list);
                     } while (cond);
                 }
 

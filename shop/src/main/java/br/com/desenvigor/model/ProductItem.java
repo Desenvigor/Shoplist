@@ -14,6 +14,17 @@ public class ProductItem {
     private String description;
     private BigDecimal price;
 
+    public ProductItem(String name, String description, BigDecimal price) {
+        this.name = name;
+        this.description = description;
+        this.price = price;
+    }
+
+    @Override
+    public String toString() {
+        return name + ", " + description + " - " + price;
+    }
+
     public int getId() {
         return id;
     }

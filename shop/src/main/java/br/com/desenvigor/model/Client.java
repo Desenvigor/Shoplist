@@ -14,6 +14,17 @@ public class Client {
     private String ssn;
     private Date birthdate;
 
+    @Override
+    public String toString() {
+        return name;
+    }
+
+    public Client(String name, String ssn, Date birthdate) {
+        this.name = name;
+        this.ssn = ssn;
+        this.birthdate = birthdate;
+    }
+
     public int getId() {
         return id;
     }

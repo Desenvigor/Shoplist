@@ -1,6 +1,8 @@
+import br.com.desenvigor.dao.ProductItemDAO;
 import br.com.desenvigor.model.Client;
 import br.com.desenvigor.model.ProductItem;
 import br.com.desenvigor.model.ShopList;
+import br.com.desenvigor.util.JPAUtil;
 
 import java.math.BigDecimal;
 import java.text.ParseException;
@@ -14,24 +16,13 @@ public class Program {
     public static void main(String[] args) throws ParseException {
         Scanner sc = new Scanner(System.in);
         int operation = 0;
-        List<ProductItem> products = new ArrayList<ProductItem>();
+        List<ProductItem> products = new ArrayList<>();
 
         while (operation != 4){
             showMenu();
             System.out.print("\nInsert operation number: ");
             operation = sc.nextInt();
             sc.nextLine();
-            ProductItem product4 = new ProductItem("Book", "New book", new BigDecimal("20.10"));
-            ProductItem product1 = new ProductItem("Pencil", "Blue", new BigDecimal("3.50"));
-            ProductItem product2 = new ProductItem("Computer", "Dell", new BigDecimal("2000.10"));
-            ProductItem product3 = new ProductItem("Mouse", "Microsoft", new BigDecimal("2.10"));
-
-            products.add(product1);
-            products.add(product2);
-            products.add(product3);
-            products.add(product4);
-
-
 
             switch (operation){
                 case 1:{
@@ -43,7 +34,8 @@ public class Program {
                     System.out.print("Price: ");
                     BigDecimal price = sc.nextBigDecimal();
                     ProductItem product = new ProductItem(name, desc, price);
-                    products.add(product);
+                    ProductItemDAO productDAO = new ProductItemDAO(new JPAUtil().createEntityManager());
+                    productDAO.insertProduct(product);
 
                     System.out.println(product);
                     break;
@@ -65,14 +57,16 @@ public class Program {
                     break;
                 }
                 case 3:{
+                    ProductItemDAO productDAO = new ProductItemDAO(new JPAUtil().createEntityManager());
+                    List<ProductItem> list2 = productDAO.findAll();
                     ShopList list = new ShopList();
                     int i = 0;
-                    for (ProductItem item: products) {
+                    for (ProductItem item: list2) {
                         System.out.println(++i +" - "+ item);
                     }
 
                     boolean cond = true;
-                    int opt = 0;
+                    int opt;
                     do {
                         System.out.println("Insert the number to add in the list: ");
                         System.out.println("Insert '0' to quit");
@@ -95,7 +89,7 @@ public class Program {
         System.out.println("Select the operation:");
         System.out.println("1 - Register new product");
         System.out.println("2 - Register new Client");
-        System.out.println("3 - Create new shoplist");
+        System.out.println("3 - Create new shop list");
         System.out.println("4 - exit system");
     }
 }

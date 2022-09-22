@@ -25,7 +25,7 @@ public class ProductItem {
 
     @Override
     public String toString() {
-        return name + ", " + description + " - " + price;
+        return "["+ id + "]" + name + ", " + description + " - " + price;
     }
 
     public int getId() {

@@ -16,7 +16,10 @@ public class Client {
 
     @Override
     public String toString() {
-        return name;
+        return "[" + id + "] " + name;
+    }
+
+    public Client() {
     }
 
     public Client(String name, String ssn, Date birthdate) {

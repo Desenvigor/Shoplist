@@ -7,6 +7,14 @@ import java.util.List;
 public class ShopList {
 
     private List<ProductItem> items = new ArrayList<>();
+    private Client client;
+
+    public ShopList() {
+    }
+
+    public ShopList(Client client) {
+        this.client = client;
+    }
 
     public void addProduct(ProductItem product){
         items.add(product);
@@ -18,6 +26,22 @@ public class ShopList {
 
     public List<ProductItem> returnList(){
         return this.items;
+    }
+
+    public Client getClient() {
+        return client;
+    }
+
+    public void setClient(Client client) {
+        this.client = client;
+    }
+
+    public void printList(){
+        List<String> text = new ArrayList<>();
+        for (ProductItem item : items){
+            text.add(item.toString());
+        }
+        PrintList.printFile(text);
     }
 
     @Override

@@ -14,10 +14,7 @@ public class ProductItemDAO {
     }
 
     public void insertProduct (ProductItem product){
-        em.getTransaction().begin();
         em.persist(product);
-        em.getTransaction().commit();
-        em.close();
     }
 
     public ProductItem findItem(ProductItem product){
@@ -33,5 +30,9 @@ public class ProductItemDAO {
         List<ProductItem> allProducts;
         allProducts = em.createQuery("SELECT p from ProductItem p", ProductItem.class).getResultList();
         return allProducts;
+    }
+
+    public ProductItem findByID(int id){
+        return em.find(ProductItem.class, id);
     }
 }

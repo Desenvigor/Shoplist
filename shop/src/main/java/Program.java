@@ -1,9 +1,11 @@
+import br.com.desenvigor.dao.ClientDAO;
 import br.com.desenvigor.dao.ProductItemDAO;
 import br.com.desenvigor.model.Client;
 import br.com.desenvigor.model.ProductItem;
 import br.com.desenvigor.model.ShopList;
 import br.com.desenvigor.util.JPAUtil;
 
+import javax.persistence.EntityManager;
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -16,13 +18,14 @@ public class Program {
     public static void main(String[] args) throws ParseException {
         Scanner sc = new Scanner(System.in);
         int operation = 0;
-        List<ProductItem> products = new ArrayList<>();
 
         while (operation != 4){
             showMenu();
             System.out.print("\nInsert operation number: ");
             operation = sc.nextInt();
             sc.nextLine();
+            EntityManager em = new JPAUtil().createEntityManager();
+
 
             switch (operation){
                 case 1:{
@@ -34,12 +37,14 @@ public class Program {
                     System.out.print("Price: ");
                     BigDecimal price = sc.nextBigDecimal();
                     ProductItem product = new ProductItem(name, desc, price);
-                    ProductItemDAO productDAO = new ProductItemDAO(new JPAUtil().createEntityManager());
+                    ProductItemDAO productDAO = new ProductItemDAO(em);
+                    em.getTransaction().begin();
                     productDAO.insertProduct(product);
+                    em.getTransaction().commit();
+                    em.close();
 
-                    System.out.println(product);
                     break;
-                }
+                } //Product register
                 case 2:{
                     System.out.println("Insert client data:");
                     System.out.print("Name: ");
@@ -53,16 +58,22 @@ public class Program {
                     Date date = formatter.parse(birthdate);
 
                     Client client = new Client(name, ssn, date);
-                    System.out.println(client);
+                    ClientDAO clientDAO = new ClientDAO(em);
+                    em.getTransaction().begin();
+                    clientDAO.insertClient(client);
+                    em.getTransaction().commit();
+                    em.close();
+
                     break;
-                }
+                } //Client Register
                 case 3:{
-                    ProductItemDAO productDAO = new ProductItemDAO(new JPAUtil().createEntityManager());
+                    ProductItemDAO productDAO = new ProductItemDAO(em);
+                    em.getTransaction().begin();
                     List<ProductItem> list2 = productDAO.findAll();
                     ShopList list = new ShopList();
                     int i = 0;
                     for (ProductItem item: list2) {
-                        System.out.println(++i +" - "+ item);
+                        System.out.println(item);
                     }
 
                     boolean cond = true;
@@ -73,13 +84,23 @@ public class Program {
                         opt = sc.nextInt();
                         if (opt == 0){
                             cond = false;
-                            break;
                         }
-                        list.addProduct(products.get(opt-1));
-                        System.out.println(list);
+                        list.addProduct(productDAO.findByID(opt));
                     } while (cond);
-                }
 
+                    System.out.println("Select the client: ");
+                    ClientDAO clientDAO = new ClientDAO(em);
+                    for (Client client : clientDAO.findALL()){
+                        System.out.println(client);
+                    }
+                    int selectClient = sc.nextInt();
+                    list.setClient(clientDAO.find(selectClient));
+                    list.printList();
+
+                    em.close();
+
+                    break;
+                } //Create new shoplist
             }
         }
 
@@ -93,4 +114,3 @@ public class Program {
         System.out.println("4 - exit system");
     }
 }
-
